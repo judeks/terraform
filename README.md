@@ -32,4 +32,6 @@ terraform plan -var-file="testing.tfvars"
    - already have a state file (we need to delete it after moving it on remote backend s3)
      * setup backend in terraform block
      *  **terraform init-migrate-state**
+   - Unlock file
+     terraform force-unlock number-lock-file
 
