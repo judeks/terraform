@@ -24,3 +24,12 @@ terraform plan -var-file="testing.tfvars"
   ### Terraform state
   Terraform state is a file that tracks the resources managed by theis Ids
   ### Why we need it
+
+### Rmonte backend state teeraform
+   - not have state file local
+      * setup backend in terraform block
+      *  **terraform init**
+   - already have a state file (we need to delete it after moving it on remote backend s3)
+     * setup backend in terraform block
+     *  **terraform init-migrate-state**
+
