@@ -35,3 +35,10 @@ terraform plan -var-file="testing.tfvars"
    - Unlock file
      terraform force-unlock number-lock-file
 
+### Why we Inspect terraform State
+   - terraform state list: list all resource in the current state
+   - terraform mv: move resource
+   - terraform rm remove resource
+   - terraform state show resource: show details about a specific state
+
+
