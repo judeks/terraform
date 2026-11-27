@@ -42,5 +42,8 @@ terraform plan -var-file="testing.tfvars"
    - terraform state show resource: show details about a specific state
 
 ### refractor-code-dynamic-reusable
-
+   - variable: get reusable data from one place for 
+   - functions: to transform data reusable
+   - interpolation
+   - datasource to grab data forn existing infra
 
