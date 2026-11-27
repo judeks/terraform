@@ -42,5 +42,16 @@ terraform plan -var-file="testing.tfvars"
    - terraform state show resource: show details about a specific state
 
 ### refractor-code-dynamic-reusable
+   - variable: get reusable data from one place for 
+   - functions: to transform data reusable
+   - interpolation
+   - datasource to grab data forn existing infra
 
-
+### Using locals to avoid Code duplication
+   - Centralized logic once and use it everywhere
+     locals {
+        key = "value"
+     }
+     access it: local.key
+   - clearer code
+   - less risk
