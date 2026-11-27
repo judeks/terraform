@@ -41,4 +41,6 @@ terraform plan -var-file="testing.tfvars"
    - terraform rm remove resource
    - terraform state show resource: show details about a specific state
 
+### refractor-code-dynamic-reusable
+
 

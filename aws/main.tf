@@ -1,96 +1,56 @@
+# Retrieve the availability zones in the target region
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 
-#create the primary vpc for workloads
+# Retrieve information about the target region
+data "aws_region" "current" {}
 
-resource "aws_vpc" "vpc-primary" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
+# Retrieve information about the user and account
+data "aws_caller_identity" "current" {}
+
+
+resource "aws_vpc" "production" {
+  cidr_block           = var.vpc_cidr # <-- update value here
   enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
-    Name        = "primary-vpc"
-    Environment = var.environment
-    ManagedBy   = "Terraform"
+    Name        = "${var.environment}-vpc" # <-- update value here
+    Environment = var.environment          # <-- update value here
+    Project     = var.project_name         # <-- update value here
+    ManagedBy   = "terraform"
+    Region      = data.aws_region.current.region              # <-- update value here
+    AccountID   = data.aws_caller_identity.current.account_id # <-- add value here
   }
 }
 
 
-resource "aws_subnet" "public-subnet" {
-  vpc_id                  = aws_vpc.vpc-primary.id
-  cidr_block              = var.public_subnet_cidr
-  availability_zone       = var.availability_zone
-  map_public_ip_on_launch = true
+resource "aws_subnet" "private" {
+  vpc_id                  = aws_vpc.production.id
+  cidr_block              = var.subnet_cidr                                # <-- update value here
+  availability_zone       = data.aws_availability_zones.available.names[0] # <-- update value here
+  map_public_ip_on_launch = false
 
   tags = {
-    Name        = "public-subnet"
-    Environment = var.environment
-    ManagedBy   = "Terraform"
+    Name        = "${var.environment}-private-subnet" # <-- update value here
+    Environment = var.environment                     # <-- update value here
+    Project     = var.project_name                    # <-- update value here
+    ManagedBy   = "terraform"
+    Region      = data.aws_region.current.region                   # <-- update value here
+    AZ          = data.aws_availability_zones.available.names[0] # <-- update value here
   }
 }
 
-resource "aws_subnet" "private-subnet" {
-  vpc_id            = aws_vpc.vpc-primary.id
-  cidr_block        = var.private_subnet_cidr
-  availability_zone = var.availability_zone
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.production.id
 
   tags = {
-    Name        = "private-subnet"
-    Environment = var.environment
-    ManagedBy   = "Terraform"
+    Name        = "${var.environment}-route-table" # <-- update value here
+    Environment = var.environment                  # <-- update value here
+    Project     = var.project_name                 # <-- update value here
+    ManagedBy   = "terraform"
+    Region      = data.aws_region.current.region # <-- update value here
   }
 }
 
-# route table for the vpc
-resource "aws_route_table" "main-route-table" {
-  vpc_id = aws_vpc.vpc-primary.id
-
-  tags = {
-    Name        = "main-route-table"
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-  }
-}
-
-# route association
-resource "aws_route_table_association" "public-subnet-association" {
-  subnet_id      = aws_subnet.public-subnet.id
-  route_table_id = aws_route_table.main-route-table.id
-}
-
-resource "aws_route_table_association" "private-subnet-association" {
-  subnet_id      = aws_subnet.private-subnet.id
-  route_table_id = aws_route_table.main-route-table.id
-}
-
-
-# Example Security Group
-resource "aws_security_group" "example" {
-  name        = "example-security-group"
-  description = "Example security group for our VPC"
-  vpc_id      = aws_vpc.vpc-primary.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "example-security-group"
-    Environment = var.environment
-  }
-}
