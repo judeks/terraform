@@ -21,51 +21,51 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}vpc-${data.aws_region.current.region}"
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}vpc-${data.aws_region.current.region}"
     }
   )
 }
 
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = var.subnet_cidr
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
-  tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}public-subnet-us-east-1a"
-    Tier = "public"
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}public-subnet-us-east-1a"
+      Tier = "public"
     }
   )
 }
 
 resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.2.0/24"
+  cidr_block              = var.subnet_cidr_2
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 
-   tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}public-subnet-us-east-1b"
-    Tier = "public"
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}public-subnet-us-east-1b"
+      Tier = "public"
     }
   )
 }
 
 resource "aws_subnet" "private_a" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.3.0/24"
+  cidr_block              = var.subnet_cidr_3
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = false
 
-   tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}public-subnet-us-east-1a"
-    Tier = "private"
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}public-subnet-us-east-1a"
+      Tier = "private"
     }
   )
 }
@@ -76,10 +76,10 @@ resource "aws_subnet" "private_b" {
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = false
 
-   tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}public-subnet-us-east-1b"
-    Tier = "private"
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}public-subnet-us-east-1b"
+      Tier = "private"
     }
   )
 }
@@ -110,9 +110,9 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge (
-    local.tags,{
-    Name = "${local.name_prefix}web-sg" # <-- update value here
+  tags = merge(
+    local.tags, {
+      Name = "${local.name_prefix}web-sg" # <-- update value here
     }
   )
 }
