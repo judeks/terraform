@@ -47,3 +47,12 @@ terraform plan -var-file="testing.tfvars"
    - interpolation
    - datasource to grab data forn existing infra
 
+### Using locals to avoid Code duplication
+   - Centralized logic once and use it everywhere
+     locals {
+        key = "value"
+     }
+     access it: local.key
+   - clearer code
+   - less risk
+
