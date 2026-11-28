@@ -21,15 +21,11 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = {
-    Name        = "${local.name_prefix}vpc-${data.aws_region.current.region}" # <-- update value here
-    Environment = local.tags.Environment                                    # <-- update value here
-    Project     = local.tags.Project                                        # <-- update value here
-    Owner       = local.tags.Owner                                          # <-- update value here
-    CostCenter  = local.tags.CostCenter                                     # <-- update value here
-    Region      = local.tags.Region                                         # <-- update value here
-    ManagedBy   = local.tags.ManagedBy                                      # <-- update value here
-  }
+  tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}vpc-${data.aws_region.current.region}"
+    }
+  )
 }
 
 resource "aws_subnet" "public_a" {
@@ -38,16 +34,12 @@ resource "aws_subnet" "public_a" {
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
-  tags = {
-    Name        = "${local.name_prefix}public-subnet-us-east-1a" # <-- update value here
-    Environment = local.tags.Environment                         # <-- update value here
-    Project     = local.tags.Project                             # <-- update value here
-    Owner       = local.tags.Owner                               # <-- update value here
-    CostCenter  = local.tags.CostCenter                          # <-- update value here
-    Region      = local.tags.Region                              # <-- update value here
-    ManagedBy   = local.tags.ManagedBy                           # <-- update value here
-    Tier        = "public"
-  }
+  tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}public-subnet-us-east-1a"
+    Tier = "public"
+    }
+  )
 }
 
 resource "aws_subnet" "public_b" {
@@ -56,16 +48,12 @@ resource "aws_subnet" "public_b" {
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 
-  tags = {
-    Name        = "${local.name_prefix}public-subnet-us-east-1b" # <-- update value here
-    Environment = local.tags.Environment                         # <-- update value here
-    Project     = local.tags.Project                             # <-- update value here
-    Owner       = local.tags.Owner                               # <-- update value here
-    CostCenter  = local.tags.CostCenter                          # <-- update value here
-    Region      = local.tags.Region                              # <-- update value here
-    ManagedBy   = local.tags.ManagedBy                           # <-- update value here
-    Tier        = "public"
-  }
+   tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}public-subnet-us-east-1b"
+    Tier = "public"
+    }
+  )
 }
 
 resource "aws_subnet" "private_a" {
@@ -74,16 +62,12 @@ resource "aws_subnet" "private_a" {
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = false
 
-  tags = {
-    Name        = "${local.name_prefix}private-subnet-us-east-1a" # <-- update value here
-    Environment = local.tags.Environment                          # <-- update value here
-    Project     = local.tags.Project                              # <-- update value here
-    Owner       = local.tags.Owner                                # <-- update value here
-    CostCenter  = local.tags.CostCenter                           # <-- update value here
-    Region      = local.tags.Region                               # <-- update value here
-    ManagedBy   = local.tags.ManagedBy                            # <-- update value here
-    Tier        = "private"
-  }
+   tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}public-subnet-us-east-1a"
+    Tier = "private"
+    }
+  )
 }
 
 resource "aws_subnet" "private_b" {
@@ -92,16 +76,12 @@ resource "aws_subnet" "private_b" {
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = false
 
-  tags = {
-    Name        = "${local.name_prefix}private-subnet-us-east-1b" # <-- update value here
-    Environment = local.tags.Environment                          # <-- update value here
-    Project     = local.tags.Project                              # <-- update value here
-    Owner       = local.tags.Owner                                # <-- update value here
-    CostCenter  = local.tags.CostCenter                           # <-- update value here
-    Region      = local.tags.Region                               # <-- update value here
-    ManagedBy   = local.tags.ManagedBy                            # <-- update value here
-    Tier        = "private"
-  }
+   tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}public-subnet-us-east-1b"
+    Tier = "private"
+    }
+  )
 }
 
 resource "aws_security_group" "web" {
@@ -130,13 +110,9 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name        = "${local.name_prefix}web-sg" # <-- update value here
-    Environment = local.tags.Environment       # <-- update value here
-    Project     = local.tags.Project           # <-- update value here
-    Owner       = local.tags.Owner             # <-- update value here
-    CostCenter  = local.tags.CostCenter        # <-- update value here
-    Region      = local.tags.Region            # <-- update value here
-    ManagedBy   = local.tags.ManagedBy         # <-- update value here
-  }
+  tags = merge (
+    local.tags,{
+    Name = "${local.name_prefix}web-sg" # <-- update value here
+    }
+  )
 }

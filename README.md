@@ -55,4 +55,10 @@ terraform plan -var-file="testing.tfvars"
      access it: local.key
    - clearer code
    - less risk
+   - Use merge: merge a value to anothe to get a map locally
+       tags = merge (
+        local.tags,{
+        Name = "${local.name_prefix}public-subnet-us-east-1a"
+        Tier = "public"
+      })
 
